@@ -1,0 +1,67 @@
+create table faculty (
+	id int primary key,
+	name varchar(50),
+	price numeric(10,2)
+);
+
+insert into faculty values(1, 'Инженерный', 30000.00);
+insert into faculty values(2, 'Экономический', 49000.00);
+
+select *
+from faculty;
+
+
+create table course (
+	id int primary key,
+	"number" int,
+	faculty_id int references faculty(id)
+);
+
+insert into course values(1, 1, 1);
+insert into course values(2, 1, 2);
+insert into course values(3, 4, 2);
+
+select *
+from course;
+
+
+create table students (
+	id int primary key,
+	"name" varchar(20),
+	surname varchar(30),
+	patronymic varchar(30),
+	is_budget boolean not null,
+	course_id int references course(id)
+);
+
+
+insert into students values(1, 'Петр', 'Петров', 'Петрович', true, 1);
+insert into students values(2, 'Иван', 'Иванов', 'Иваныч', false, 1);
+insert into students values(3, 'Сергей', 'Михно', 'Иваныч', true, 1);
+insert into students values(4, 'Ирина', 'Стоцкая', 'Юрьевна', false, 3);
+insert into students values(5, 'Настастья', 'Младич', null, false, 2);
+
+select *
+from students;
+
+select *
+from students join course on students.course_id = course.id
+			  join faculty on course.faculty_id = faculty.id
+			  where faculty.price > 30000.00
+			   and students.is_budget = false;
+
+
+update students set course_id = 2
+where "surname" = 'Петров';
+
+select *
+from students
+where surname is null or patronymic is null;
+
+select *
+from students
+where name like '%ван%';
+
+delete from students;
+delete from course;
+delete from faculty;
